@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carincielec — Démo vidéo hero</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+  <style>
+    /* ========== HERO VIDEO OVERRIDE ========== */
+    .hero--video {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      /* Fallback si pas de vidéo */
+      background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 50%, #1F2937 100%);
+    }
+
+    .hero--video .hero__video-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    /* Overlay sombre pour lisibilité du texte */
+    .hero--video .hero__video-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.82) 0%,
+        rgba(30, 58, 95, 0.7) 50%,
+        rgba(31, 41, 55, 0.8) 100%
+      );
+      z-index: 1;
+    }
+
+    /* Grille subtile par-dessus l'overlay */
+    .hero--video .hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      background-size: 80px 80px;
+      z-index: 2;
+    }
+
+    .hero--video .hero__content {
+      position: relative;
+      z-index: 3;
+      padding: 120px 0 80px;
+      max-width: 680px;
+    }
+
+    .hero--video .hero__personnage {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      height: 85%;
+      width: auto;
+      z-index: 3;
+      object-fit: contain;
+      /* Légère ombre pour décoller le personnage de la vidéo */
+      filter: drop-shadow(0 4px 24px rgba(0, 0, 0, 0.4));
+    }
+
+    /* Bandeau info démo */
+    .demo-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 2000;
+      background: linear-gradient(90deg, #E5A913, #C99200);
+      color: #1F2937;
+      text-align: center;
+      padding: 10px 24px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .demo-banner a {
+      color: #1F2937;
+      text-decoration: underline;
+      margin-left: 8px;
+    }
+
+    /* Placeholder si pas de vidéo */
+    .hero__video-placeholder {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 50%, #1F2937 100%);
+      color: rgba(255,255,255,0.15);
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    /* Masquer les personnages hérités du CSS principal */
+    .testimonials::before,
+    .about__img,
+    .page-hero__personnage,
+    .legal-content__personnage {
+      display: none !important;
+    }
+
+    /* Mobile : cacher le personnage comme sur le site principal */
+    @media (max-width: 768px) {
+      .hero--video .hero__personnage {
+        display: none;
+      }
+
+      .hero--video {
+        min-height: auto;
+        padding-top: 72px;
+      }
+
+      .hero--video .hero__content {
+        padding: 48px 16px 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__logo"><img src="logo-icon (200 x 200 px) (1).svg" alt="Carincielec" class="navbar__logo-img">carinci<span>elec</span></a>
+      <ul class="navbar__links" id="navLinks">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="#about">À propos</a></li>
+        <li><a href="services.html">Nos services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li class="nav-cta-mobile"><a href="tel:0663140974" class="btn btn--small btn--full">06 63 14 09 74</a></li>
+      </ul>
+      <a href="tel:0663140974" class="btn btn--small navbar__cta">06 63 14 09 74</a>
+      <button class="navbar__burger" id="navBurger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== HERO AVEC VIDÉO ========== -->
+  <header class="hero hero--video">
+    <!-- Vidéo en background -->
+    <video
+      class="hero__video-bg"
+      autoplay
+      muted
+      playsinline
+      poster=""
+    >
+      <!--
+        REMPLACER ci-dessous par le chemin de ta vidéo.
+        Formats recommandés : .mp4 (H.264) + .webm (VP9) pour compatibilité maximale.
+        Taille idéale : 1920x1080, max 10-15 Mo pour un chargement rapide.
+      -->
+      <source src="Eclair.mp4" type="video/mp4">
+    </video>
+
+    <!-- Overlay sombre pour lisibilité -->
+    <div class="hero__video-overlay"></div>
+
+    <!-- Grille subtile -->
+    <div class="hero__overlay"></div>
+
+    <!-- Personnage tire câble -->
+    <img src="Personnage tire câble.svg" alt="Personnage Carincielec" class="hero__personnage">
+
+    <!-- Contenu texte -->
+    <div class="container hero__content">
+      <p class="hero__tag">Sainte-Lucie de Porto-Vecchio et environs</p>
+      <h1 class="hero__title">Votre électricien en Corse du Sud,<br>20 ans d'expertise à votre service.</h1>
+      <p class="hero__sub">Installation, rénovation, dépannage. La garantie d'un artisan de confiance et de proximité, fort de 20 ans d'expérience dans le métier.</p>
+      <div class="hero__actions">
+        <a href="services.html" class="btn">Découvrir nos services</a>
+        <a href="tel:0663140974" class="btn btn--outline">Appeler maintenant</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== SERVICES APERÇU ========== -->
+  <section class="services-preview" id="services">
+    <div class="container">
+      <p class="section__tag">Ce que nous faisons</p>
+      <h2 class="section__title">Nos services</h2>
+      <div class="services-grid">
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <div class="lottie-icon" data-lottie="prise" style="width:40px;height:40px"></div>
+          </div>
+          <h3>Installation électrique</h3>
+          <p>Conception et mise en place de systèmes complets pour constructions neuves et rénovations.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <div class="lottie-icon" data-lottie="clefs" style="width:40px;height:40px"></div>
+          </div>
+          <h3>Rénovation & conformité</h3>
+          <p>Modernisation des installations obsolètes et mise aux normes de votre tableau électrique.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <div class="lottie-icon" data-lottie="horloge" style="width:40px;height:40px"></div>
+          </div>
+          <h3>Dépannage 24/7</h3>
+          <p>Intervention rapide sur pannes, courts-circuits et dysfonctionnements électriques.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <div class="lottie-icon" data-lottie="chandelier" style="width:40px;height:40px"></div>
+          </div>
+          <h3>Éclairage</h3>
+          <p>Solutions LED intérieures et extérieures pour jardins, terrasses et allées.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <div class="lottie-icon" data-lottie="camera" style="width:40px;height:40px"></div>
+          </div>
+          <h3>Sécurité</h3>
+          <p>Alarmes, interphones audio/vidéo, caméras de surveillance et détecteurs.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <div class="lottie-icon" data-lottie="batterie" style="width:40px;height:40px"></div>
+          </div>
+          <h3>Bornes de recharge</h3>
+          <p>Installation de bornes pour véhicules électriques, conformes aux normes en vigueur.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <div class="lottie-icon" data-lottie="engrenage" style="width:40px;height:40px"></div>
+          </div>
+          <h3>Motorisation de portail</h3>
+          <p>Portails battants ou coulissants, commande à distance par télécommande ou application.</p>
+        </div>
+
+      </div>
+      <div class="services-preview__cta">
+        <a href="services.html" class="btn">Voir tous nos services en détail</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== À PROPOS ========== -->
+  <section class="about" id="about">
+    <div class="container about__inner">
+      <div class="about__text">
+        <p class="section__tag">Qui sommes-nous</p>
+        <h2 class="section__title">Notre expertise pour votre sécurité</h2>
+        <p>Entreprise artisanale basée à Sainte Lucie de Porto Vecchio, Carincielec met ses 20 ans d'expérience dans le métier au service des particuliers et professionnels de Corse du Sud. De l'installation neuve au dépannage d'urgence, nous plaçons la qualité et la sécurité au centre de chaque intervention.</p>
+        <div class="about__values">
+          <div class="value">
+            <strong>Professionnalisme</strong>
+            <span>Travail rigoureux par des techniciens qualifiés</span>
+          </div>
+          <div class="value">
+            <strong>Proximité</strong>
+            <span>Un artisan local, une relation de confiance</span>
+          </div>
+          <div class="value">
+            <strong>Sécurité</strong>
+            <span>Respect strict des normes en vigueur</span>
+          </div>
+          <div class="value">
+            <strong>Innovation</strong>
+            <span>Technologies modernes et solutions durables</span>
+          </div>
+        </div>
+      </div>
+      <div class="about__image"></div>
+    </div>
+  </section>
+
+  <!-- ========== TÉMOIGNAGES ========== -->
+  <section class="testimonials">
+    <div class="container">
+      <p class="section__tag">Avis clients</p>
+      <h2 class="section__title">Ce que disent nos clients</h2>
+      <div class="testimonials-grid">
+
+        <blockquote class="testimonial">
+          <div class="testimonial__header">
+            <svg class="testimonial__google" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A11.96 11.96 0 0 0 0 12c0 1.94.46 3.77 1.28 5.4l3.56-2.77.01-.54z" fill="#FBBC05"/><path d="M12 4.75c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 1.09 14.97 0 12 0 7.7 0 3.99 2.47 2.18 6.07l3.66 2.84c.87-2.6 3.3-4.16 6.16-4.16z" fill="#EA4335"/></svg>
+            <div class="testimonial__stars">★★★★★</div>
+          </div>
+          <p>« Intervention rapide et travail soigné. Mr Carinci est un électricien très compétent, consciencieux, disponible, ponctuel mais aussi très sympathique, je recommande vivement. »</p>
+          <cite>— Caty Thomas</cite>
+        </blockquote>
+
+        <blockquote class="testimonial">
+          <div class="testimonial__header">
+            <svg class="testimonial__google" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A11.96 11.96 0 0 0 0 12c0 1.94.46 3.77 1.28 5.4l3.56-2.77.01-.54z" fill="#FBBC05"/><path d="M12 4.75c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 1.09 14.97 0 12 0 7.7 0 3.99 2.47 2.18 6.07l3.66 2.84c.87-2.6 3.3-4.16 6.16-4.16z" fill="#EA4335"/></svg>
+            <div class="testimonial__stars">★★★★★</div>
+          </div>
+          <p>« Excellent travail de la part de Franck, réactivité et professionnalisme dans la bonne humeur. Nous recommandons. »</p>
+          <cite>— Hôtel Résidence Olmuccio</cite>
+        </blockquote>
+
+        <blockquote class="testimonial">
+          <div class="testimonial__header">
+            <svg class="testimonial__google" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A11.96 11.96 0 0 0 0 12c0 1.94.46 3.77 1.28 5.4l3.56-2.77.01-.54z" fill="#FBBC05"/><path d="M12 4.75c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 1.09 14.97 0 12 0 7.7 0 3.99 2.47 2.18 6.07l3.66 2.84c.87-2.6 3.3-4.16 6.16-4.16z" fill="#EA4335"/></svg>
+            <div class="testimonial__stars">★★★★★</div>
+          </div>
+          <p>« Résolution rapide d'une panne complexe. Nous recommandons vivement ! »</p>
+          <cite>— Dominique Brunat</cite>
+        </blockquote>
+
+      </div>
+      <div class="testimonials__cta">
+        <a href="https://www.google.com/search?sca_esv=ad51375bc05ed99f&q=carinci+elec&si=AL3DRZEsmMCCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOdLRRmnP_0l4yfx83g6Lze1_p3Bv-8Pg-3U9bEOXBa_Trh2AFamWKkMuiJnDEPN2vXQMCgQ%3D&uds=ALYpb_kPfttAwudk1x-HGnga9iDDR0ins4Epgj2CHv0yNOLHboNi6NXXRIKi1zhLkg6qCuWudKqn0fNBWQP06V0vgOla3imTTnz07FNnJqcxx7N7A0zk2FY" target="_blank" rel="noopener" class="btn btn--outline">Voir tous les avis Google</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT RAPIDE ========== -->
+  <section class="contact-quick" id="contact">
+    <div class="container contact-quick__inner">
+      <div class="contact-quick__info">
+        <p class="section__tag">Contact</p>
+        <h2 class="section__title">Parlons de votre projet</h2>
+        <div class="contact-detail">
+          <strong>Téléphone</strong>
+          <a href="tel:0663140974">06 63 14 09 74</a>
+        </div>
+        <div class="contact-detail">
+          <strong>Email</strong>
+          <a href="mailto:carincielec@gmail.com">carincielec@gmail.com</a>
+        </div>
+        <div class="contact-detail">
+          <strong>Adresse</strong>
+          <span>Sainte Lucie de Porto Vecchio, Corse</span>
+        </div>
+        <div class="contact-detail">
+          <strong>Horaires</strong>
+          <span>Lun – Sam · 8h30 – 18h30</span>
+        </div>
+      </div>
+      <form class="contact-quick__form" action="https://formspree.io/f/xlgplygn" method="POST">
+        <input type="hidden" name="_subject" value="Nouveau message depuis carincielec.com (démo)">
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+        <input type="text" name="name" placeholder="Votre nom" required>
+        <input type="tel" name="phone" placeholder="Votre téléphone" required>
+        <textarea name="message" rows="4" placeholder="Décrivez votre besoin..." required></textarea>
+        <button type="submit" class="btn btn--full">Envoyer le message</button>
+        <p class="form-success" style="display:none;color:#16a34a;font-weight:600;margin-top:16px;">Merci ! Votre message a bien été envoyé. Nous vous recontacterons rapidement.</p>
+        <p class="form-error" style="display:none;color:#dc2626;font-weight:600;margin-top:16px;">Une erreur est survenue. Veuillez réessayer ou nous appeler directement.</p>
+      </form>
+    </div>
+  </section>
+
+  <div class="site-bottom">
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="index.html" class="navbar__logo"><img src="logo-icon (200 x 200 px) (1).svg" alt="Carincielec" class="navbar__logo-img">carinci<span>elec</span></a>
+        <p>Électricien artisan en Corse du Sud.<br>Qualité, sécurité, proximité.</p>
+      </div>
+      <div class="footer__nav">
+        <strong>Navigation</strong>
+        <a href="index.html">Accueil</a>
+        <a href="services.html">Nos services</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer__contact">
+        <strong>Contact</strong>
+        <a href="tel:0663140974">06 63 14 09 74</a>
+        <a href="mailto:carincielec@gmail.com">carincielec@gmail.com</a>
+        <span>Sainte Lucie de Porto Vecchio</span>
+      </div>
+    </div>
+    <div class="footer__bottom container">
+      <span>&copy; 2026 carincielec.com</span>
+      <a href="politique-de-confidentialite.html">Politique de confidentialité</a>
+    </div>
+  </footer>
+  </div>
+
+  <!-- ========== BOUTON MOBILE FLOTTANT ========== -->
+  <a href="tel:0663140974" class="fab-call" aria-label="Appeler">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+  </a>
+
+  <!-- Bandeau démo -->
+  <div class="demo-banner">
+    PAGE DÉMO — Vidéo background hero &middot; Non déployée
+    <a href="index.html">Voir la version actuelle</a>
+  </div>
+
+  <script src="lottie-data.js"></script>
+  <script src="script.js"></script>
+  <script>
+    // Fallback : si la vidéo ne charge pas, le gradient reste visible
+    const video = document.querySelector('.hero__video-bg');
+    if (video) {
+      video.addEventListener('error', function() {
+        this.style.display = 'none';
+      });
+      // Certains navigateurs ne déclenchent pas d'erreur sur les sources
+      // Vérifier après un court délai
+      setTimeout(() => {
+        if (video.networkState === 3 || video.readyState === 0) {
+          video.style.display = 'none';
+        }
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

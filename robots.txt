@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /og-image.html
+Disallow: /merci.html
+
+Sitemap: https://carincielec.com/sitemap.xml

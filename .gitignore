@@ -1,0 +1,4 @@
+node_modules/
+demo-deploy/
+.claude/
+*.mp4
