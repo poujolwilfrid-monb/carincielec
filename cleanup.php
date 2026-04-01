@@ -21,6 +21,7 @@ $files = [
     'electricien-zonza.html',
     'sitemap.xml',
     'robots.txt',
+    'personnage-chuuut.webp',
 ];
 
 $baseUrl = 'https://raw.githubusercontent.com/poujolwilfrid-monb/carincielec/master/';
