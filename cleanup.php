@@ -1,6 +1,6 @@
 <?php
 /**
- * Script de nettoyage v5 — vider public_html sauf .private et tmp
+ * Script v6 — créer .htaccess de rewrite à la racine de public_html + nettoyer tmp
  * À SUPPRIMER après utilisation
  */
 
@@ -10,47 +10,39 @@ if (!isset($_GET['token']) || $_GET['token'] !== 'carinci2026cleanup') {
 
 $publicHtml = dirname(__DIR__);
 
-echo "<h2>Nettoyage v5 — vider public_html</h2>";
-echo "<p>Dossier : " . htmlspecialchars($publicHtml) . "</p><ul>";
+echo "<h2>Configuration v6</h2>";
 
-$deleted = 0;
-
-function deleteRecursive($path) {
-    if (is_dir($path)) {
-        $it = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS);
-        $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
-        foreach ($files as $file) {
-            if ($file->isDir()) rmdir($file->getRealPath());
-            else unlink($file->getRealPath());
-        }
-        return rmdir($path);
-    } else {
-        return unlink($path);
+// Étape 1 : supprimer le dossier tmp s'il existe
+$tmpDir = $publicHtml . '/tmp';
+if (is_dir($tmpDir)) {
+    $it = new RecursiveDirectoryIterator($tmpDir, RecursiveDirectoryIterator::SKIP_DOTS);
+    $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
+    foreach ($files as $file) {
+        if ($file->isDir()) rmdir($file->getRealPath());
+        else unlink($file->getRealPath());
     }
+    rmdir($tmpDir);
+    echo "<p style='color:green'>✓ Dossier tmp/ supprimé</p>";
 }
 
-$items = scandir($publicHtml);
-foreach ($items as $item) {
-    if ($item === '.' || $item === '..') continue;
-    if ($item === '.private' || $item === 'tmp') {
-        echo "<li style='color:blue'>⏭ Conservé : $item</li>";
-        continue;
-    }
-    $path = $publicHtml . '/' . $item;
-    if (deleteRecursive($path)) {
-        echo "<li style='color:green'>✓ Supprimé : " . htmlspecialchars($item) . "</li>";
-        $deleted++;
-    } else {
-        echo "<li style='color:red'>✗ Échec : " . htmlspecialchars($item) . "</li>";
-    }
+// Étape 2 : créer le .htaccess à la racine de public_html
+$htaccess = $publicHtml . '/.htaccess';
+$content = 'RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/live/
+RewriteRule ^(.*)$ /live/$1 [L]
+';
+
+if (file_put_contents($htaccess, $content)) {
+    echo "<p style='color:green'>✓ .htaccess créé dans public_html (rewrite vers /live/)</p>";
+} else {
+    echo "<p style='color:red'>✗ Échec création .htaccess</p>";
 }
 
-echo "</ul><p><strong>$deleted éléments supprimés.</strong></p>";
-
-echo "<h3>Contenu final de public_html :</h3><ul>";
+// Vérification
+echo "<h3>Contenu de public_html :</h3><ul>";
 foreach (scandir($publicHtml) as $r) {
     if ($r === '.' || $r === '..') continue;
     echo "<li>" . htmlspecialchars($r) . "</li>";
 }
 echo "</ul>";
-echo "<p><strong>Prochaine étape :</strong> supprimer le dépôt GIT 'tmp' sur Hostinger, puis recréer avec répertoire VIDE.</p>";
+echo "<p><strong>Terminé !</strong> Testez https://carincielec.com — puis supprimez cleanup.php du repo.</p>";
