@@ -1,6 +1,6 @@
 <?php
 /**
- * Script de migration v4 — déplace les fichiers de deploy/ vers public_html/ et nettoie
+ * Script de nettoyage v5 — vider public_html sauf .private et tmp
  * À SUPPRIMER après utilisation
  */
 
@@ -9,60 +9,48 @@ if (!isset($_GET['token']) || $_GET['token'] !== 'carinci2026cleanup') {
 }
 
 $publicHtml = dirname(__DIR__);
-$siteDir = $publicHtml . '/site';
-$deployDir = $publicHtml . '/deploy';
 
-echo "<h2>Migration v4 — deploy/ → public_html/</h2>";
+echo "<h2>Nettoyage v5 — vider public_html</h2>";
+echo "<p>Dossier : " . htmlspecialchars($publicHtml) . "</p><ul>";
 
-// Étape 1 : supprimer l'ancien dossier site/
-if (is_dir($siteDir)) {
-    $it = new RecursiveDirectoryIterator($siteDir, RecursiveDirectoryIterator::SKIP_DOTS);
-    $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
-    foreach ($files as $file) {
-        if ($file->isDir()) rmdir($file->getRealPath());
-        else unlink($file->getRealPath());
+$deleted = 0;
+
+function deleteRecursive($path) {
+    if (is_dir($path)) {
+        $it = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS);
+        $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($files as $file) {
+            if ($file->isDir()) rmdir($file->getRealPath());
+            else unlink($file->getRealPath());
+        }
+        return rmdir($path);
+    } else {
+        return unlink($path);
     }
-    rmdir($siteDir);
-    echo "<p style='color:green'>✓ Ancien dossier site/ supprimé</p>";
-} else {
-    echo "<p>Pas de dossier site/ à supprimer</p>";
 }
 
-// Étape 2 : copier tout de deploy/ vers public_html/
-if (is_dir($deployDir)) {
-    $count = 0;
-    $it = new RecursiveDirectoryIterator($deployDir, RecursiveDirectoryIterator::SKIP_DOTS);
-    $files = new RecursiveIteratorIterator($it);
-    foreach ($files as $file) {
-        $relativePath = substr($file->getRealPath(), strlen($deployDir) + 1);
-        $destPath = $publicHtml . '/' . $relativePath;
-        $destDir = dirname($destPath);
-        if (!is_dir($destDir)) mkdir($destDir, 0755, true);
-        copy($file->getRealPath(), $destPath);
-        $count++;
+$items = scandir($publicHtml);
+foreach ($items as $item) {
+    if ($item === '.' || $item === '..') continue;
+    if ($item === '.private' || $item === 'tmp') {
+        echo "<li style='color:blue'>⏭ Conservé : $item</li>";
+        continue;
     }
-    echo "<p style='color:green'>✓ $count fichiers copiés de deploy/ vers public_html/</p>";
-
-    // Supprimer le dossier deploy/
-    $it2 = new RecursiveDirectoryIterator($deployDir, RecursiveDirectoryIterator::SKIP_DOTS);
-    $files2 = new RecursiveIteratorIterator($it2, RecursiveIteratorIterator::CHILD_FIRST);
-    foreach ($files2 as $file) {
-        if ($file->isDir()) rmdir($file->getRealPath());
-        else unlink($file->getRealPath());
+    $path = $publicHtml . '/' . $item;
+    if (deleteRecursive($path)) {
+        echo "<li style='color:green'>✓ Supprimé : " . htmlspecialchars($item) . "</li>";
+        $deleted++;
+    } else {
+        echo "<li style='color:red'>✗ Échec : " . htmlspecialchars($item) . "</li>";
     }
-    rmdir($deployDir);
-    echo "<p style='color:green'>✓ Dossier deploy/ supprimé</p>";
-} else {
-    echo "<p style='color:red'>✗ Dossier deploy/ introuvable</p>";
 }
 
-// Vérification finale
-echo "<h3>Contenu de public_html :</h3><ul>";
-$remaining = scandir($publicHtml);
-foreach ($remaining as $r) {
+echo "</ul><p><strong>$deleted éléments supprimés.</strong></p>";
+
+echo "<h3>Contenu final de public_html :</h3><ul>";
+foreach (scandir($publicHtml) as $r) {
     if ($r === '.' || $r === '..') continue;
-    $isDir = is_dir($publicHtml . '/' . $r) ? ' (dossier)' : '';
-    echo "<li>" . htmlspecialchars($r) . $isDir . "</li>";
+    echo "<li>" . htmlspecialchars($r) . "</li>";
 }
 echo "</ul>";
-echo "<p><strong>Migration terminée !</strong> Le site devrait maintenant fonctionner directement depuis public_html/.</p>";
+echo "<p><strong>Prochaine étape :</strong> supprimer le dépôt GIT 'tmp' sur Hostinger, puis recréer avec répertoire VIDE.</p>";
