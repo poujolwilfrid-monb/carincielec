@@ -550,6 +550,7 @@ a {
    ============================================ */
 .testimonials {
   padding: 120px 0;
+  margin-top: 60px;
   position: relative;
   overflow: hidden;
   background: #1E3A5F;
