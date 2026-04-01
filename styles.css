@@ -969,7 +969,7 @@ a {
 }
 
 .page-hero__personnage {
-  max-height: 420px;
+  max-height: 520px;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
